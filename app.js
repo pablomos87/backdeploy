@@ -14,7 +14,7 @@ app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors({
-origin: 'http://localhost:3000',
+origin: 'http://localhost:3000 || https://frontdeploy-gold.vercel.app/',
   credentials: true,
 })); 
 
@@ -23,8 +23,8 @@ app.use(session({
   resave: false, 
   saveUninitialized: false, 
   cookie: { maxAge: 7 * 24 * 60 * 60 * 1000,
-  sameSite: 'lax',
-  secure: false,
+  sameSite: 'none',
+  secure: true,
  }
 }));
 
