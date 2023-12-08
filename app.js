@@ -28,10 +28,6 @@ app.use(session({
  }
 }));
 
-app.use((req, res, next) => {
-  console.log('Sesión creada:', req.session);
-  next();
-});
 
 app.use(express.urlencoded({ extended: false }));
 
