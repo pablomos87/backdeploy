@@ -8,12 +8,12 @@ userRouter.get('/', async (req, res) => {
   try {
     const allUsers = await findUser();
     res.json({ users: allUsers });
-    
   } catch (err) {
     console.error('Error al obtener todos los usuarios:', err);
     res.status(500).json({ error: 'Error al obtener todos los usuarios' });
   }
 });
+
 
 userRouter.get('/byusername', async (req, res) => {
   const { username } = req.query;
@@ -153,11 +153,17 @@ userRouter.get('/count', async (req, res) => {
   }
 });
 
-userRouter.delete('/delete', async (req, res) => {
-  const {userId} = req.body;
-  await deleteUserById(userId)
-  res.json({ message: `User con ID ${userId} eliminado exitosamente` });
+userRouter.delete('/delete/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    await deleteUserById(userId);
+    res.json({ message: `Usuario con ID ${userId} eliminado exitosamente` });
+  } catch (err) {
+    console.error(`Error al eliminar usuario con ID ${userId}:`, err);
+    res.status(500).json({ error: `Error al eliminar usuario con ID ${userId}` });
+  }
 });
+
 
 userRouter.get('/users-courses', async (req, res) => {
   try {

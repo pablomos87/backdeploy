@@ -1,26 +1,30 @@
 const express = require('express');
-const { createCourse, getCourses, updateCourseById, getCourseById, deleteCourseById, getRandomCourses } = require('../dao/controllers/coursesController')
-const Courses = require('../dao/models/courses');
-const {findUserById} = require ('../dao/controllers/userController');
-
-
 const coursesRouter = express.Router();
+const {
+  createCourse,
+  getCourses,
+  updateCourseById,
+  getCourseById,
+  deleteCourseById,
+  getRandomCourses,
+} = require('../dao/controllers/coursesController');
+const { findUserById } = require('../dao/controllers/userController');
 
 coursesRouter.post('/newcourse', async (req, res) => {
-  const {nombre, resumen, precio, duracion, regularidad, certificacion, requisitos, inscriptos, imagen, descripcion, inicio} = req.body
-  if(nombre &&  precio &&  resumen &&  duracion &&  regularidad && certificacion && requisitos &&  inscriptos &&  imagen && descripcion && inicio){
-      const result = await createCourse({nombre, resumen, precio, inicio, requisitos, duracion, regularidad, certificacion, inscriptos, imagen,descripcion})
-      if(result){
-        res.json({ message: 'Curso cargado exitosamente' });
-          console.log('Curso cargado')
-      }
-      else{
-          res.json('error')
-          console.log('Error al cargar el curso')
-      }
+  try {
+    const { nombre, resumen, precio, duracion, regularidad, certificacion, requisitos, inscriptos, imagen, descripcion, inicio } = req.body;
+
+    if (nombre && precio && resumen && duracion && regularidad && certificacion && requisitos && inscriptos && imagen && descripcion && inicio) {
+      await createCourse({ nombre, resumen, precio, inicio, requisitos, duracion, regularidad, certificacion, inscriptos, imagen, descripcion });
+      res.status(200).json({ message: 'Curso cargado exitosamente' });
+    } else {
+      throw new Error('Faltan datos requeridos');
+    }
+  } catch (error) {
+    console.error('Error al cargar el curso:', error);
+    res.status(500).json({ error: 'Error al cargar el curso' });
   }
 });
-
 
 coursesRouter.get('/', async (req, res) => {
   try {
@@ -31,7 +35,6 @@ coursesRouter.get('/', async (req, res) => {
     res.status(500).json({ error: 'Error al obtener la lista de cursos' });
   }
 });
-
 
 coursesRouter.get('/detail', async (req, res) =>{
   const {courseId} = req.query 
