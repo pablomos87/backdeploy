@@ -7,6 +7,8 @@ const adminRouter = require('./routers/adminRouter.js');
 const userRouter = require('./routers/userRouter.js');
 const coursesRouter = require('./routers/coursesRouter.js');
 const session = require('express-session');
+const MemoryStore = require('memorystore')(session);
+
 
 
 const app = express();
@@ -21,10 +23,13 @@ app.use(cors({
 app.use(session({
   secret: 'mi-clave',
   resave: false, 
-  saveUninitialized: false, 
+  saveUninitialized: false,
+  store: new MemoryStore({
+    checkPeriod: 86400000, 
+  }),
   cookie: { maxAge: 7 * 24 * 60 * 60 * 1000,
   sameSite: 'none',
-  secure: true,
+  secure: true,x
  }
 }));
 
