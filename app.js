@@ -14,9 +14,9 @@ app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors({
-origin: 'http://localhost:3000 || https://frontdeploy-gold.vercel.app/',
+  origin: ['http://localhost:3000', 'https://frontdeploy-gold.vercel.app'],
   credentials: true,
-})); 
+}));
 
 app.use(session({
   secret: 'mi-clave',
