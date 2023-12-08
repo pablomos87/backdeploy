@@ -102,7 +102,7 @@ userRouter.post('/login', async (req, res) => {
       const userId = await getUserIdByUsername(username);
       req.session.user = username
       res.cookie('userSession', JSON.stringify(user), {
-        /* httpOnly: true, */
+        httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       console.log('Sesión establecida:', req.session.user);
