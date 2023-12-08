@@ -101,10 +101,7 @@ userRouter.post('/login', async (req, res) => {
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
       req.session.user = username
-      res.cookie('userSession', JSON.stringify(user), {
-        httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
+      res.cookie('userSession', JSON.stringify(user));
       console.log('Sesión establecida:', req.session.user);
       console.log('Configuración de la cookie userSession:', res.getHeaders()['set-cookie']);
       res.json({ message: 'Logeado correctamente', userId }); 
