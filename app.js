@@ -27,6 +27,7 @@ app.use(session({
     sameSite: 'none',
     secure: true,
     name: userSession,
+    httpOnly: true,
   },
 }));
 
