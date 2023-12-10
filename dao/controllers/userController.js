@@ -112,7 +112,7 @@ const loginUser = async (req, res) => {
 
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
-      res.cookie('UserSession', userId, { 
+      res.cookie('userSession', userId, { 
         maxAge: 24 * 60 * 60 * 1000, // Tiempo de vida de la cookie (en milisegundos)
         httpOnly: true, 
         sameSite: 'none',
