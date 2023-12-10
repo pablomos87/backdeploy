@@ -20,7 +20,7 @@ origin: ['http://localhost:3000', 'https://frontdeploy-pablomos87.vercel.app', '
 
 app.use(session({
   secret: 'mi-clave',
-  name: session,
+  name: userSession,
   resave: false, 
   saveUninitialized: false, 
   cookie: {
