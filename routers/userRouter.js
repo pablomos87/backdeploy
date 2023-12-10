@@ -48,6 +48,8 @@ userRouter.post('/login', loginUser);
 
 userRouter.post('/logout',logoutUser);
 
+
+
 userRouter.get('/count', async (req, res) => {
   try {
     const count = await countUsers();

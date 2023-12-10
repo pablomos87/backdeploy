@@ -112,8 +112,8 @@ const loginUser = async (req, res) => {
 
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
-      req.session.user = username;
-      res.json({ message: 'Logeado correctamente', userId });
+      req.session.user = { username, userId };
+      res.json({ message: 'Logeado correctamente', userId:  req.session.user });
     } else {
       throw new Error(result.message);
     }
