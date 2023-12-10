@@ -26,7 +26,7 @@ app.use(session({
     maxAge: 7 * 24 * 60 * 60 * 1000, 
     sameSite: 'none',
     secure: true,
-    name: userSession,
+    name: 'userSession',
     httpOnly: true,
   },
 }));
