@@ -112,12 +112,6 @@ const loginUser = async (req, res) => {
 
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
-      res.cookie('userSession', userId, { 
-        maxAge: 24 * 60 * 60 * 1000, // Tiempo de vida de la cookie (en milisegundos)
-        httpOnly: true, 
-        sameSite: 'none',
-        secure: true,
-      });
       req.session.user = { username, userId };
       res.json({ message: 'Logeado correctamente', userId:  req.session.user });
     } else {
