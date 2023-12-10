@@ -1,26 +1,66 @@
 const express = require('express');
-const { createCourse, getCourses, updateCourseById, getCourseById, deleteCourseById, getRandomCourses } = require('../dao/controllers/coursesController')
-const Courses = require('../dao/models/courses');
-const {findUserById} = require ('../dao/controllers/userController');
-
-
+const {
+  createCourse,
+  getCourses,
+  updateCourseById,
+  getCourseById,
+  deleteCourseById,
+  getRandomCourses,
+} = require('../dao/controllers/coursesController');
+const { findUserById } = require('../dao/controllers/userController');
 const coursesRouter = express.Router();
 
 coursesRouter.post('/newcourse', async (req, res) => {
-  const {nombre, resumen, precio, duracion, regularidad, certificacion, requisitos, inscriptos, imagen, descripcion, inicio} = req.body
-  if(nombre &&  precio &&  resumen &&  duracion &&  regularidad && certificacion && requisitos &&  inscriptos &&  imagen && descripcion && inicio){
-      const result = await createCourse({nombre, resumen, precio, inicio, requisitos, duracion, regularidad, certificacion, inscriptos, imagen,descripcion})
-      if(result){
-        res.json({ message: 'Curso cargado exitosamente' });
-          console.log('Curso cargado')
-      }
-      else{
-          res.json('error')
-          console.log('Error al cargar el curso')
-      }
+  try {
+    const {
+      nombre,
+      resumen,
+      precio,
+      duracion,
+      regularidad,
+      certificacion,
+      requisitos,
+      inscriptos,
+      imagen,
+      descripcion,
+      inicio,
+    } = req.body;
+
+    if (
+      nombre &&
+      precio &&
+      resumen &&
+      duracion &&
+      regularidad &&
+      certificacion &&
+      requisitos &&
+      inscriptos &&
+      imagen &&
+      descripcion &&
+      inicio
+    ) {
+      await createCourse({
+        nombre,
+        resumen,
+        precio,
+        inicio,
+        requisitos,
+        duracion,
+        regularidad,
+        certificacion,
+        inscriptos,
+        imagen,
+        descripcion,
+      });
+      res.json({ message: 'Curso cargado exitosamente' });
+    } else {
+      res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+  } catch (error) {
+    console.error('Error al cargar el curso:', error);
+    res.status(500).json({ error: 'Error al cargar el curso' });
   }
 });
-
 
 coursesRouter.get('/', async (req, res) => {
   try {
@@ -32,35 +72,56 @@ coursesRouter.get('/', async (req, res) => {
   }
 });
 
-
-coursesRouter.get('/detail', async (req, res) =>{
-  const {courseId} = req.query 
-  console.log('ID del curso recibido:', courseId); 
-  const course =  await getCourseById(courseId)
+coursesRouter.get('/detail', async (req, res) => {
+  const { courseId } = req.query;
+  console.log('ID del curso recibido:', courseId);
+  const course = await getCourseById(courseId);
   console.log('Curso encontrado:', course);
-   if(course){
-    res.status(200).json({course})
-  }
-
-  else{
-      res.status(404).json({error: 'Course not found'})
+  if (course) {
+    res.status(200).json({ course });
+  } else {
+    res.status(404).json({ error: 'Course not found' });
   }
 });
 
-coursesRouter.post('/edit', async (req, res) =>{
-  const {nombre , resumen ,precio, duracion, regularidad, requisitos, certificacion, inscriptos, imagen, descripcion, inicio, id} = req.body
+coursesRouter.post('/edit', async (req, res) => {
+  const {
+    nombre,
+    resumen,
+    precio,
+    duracion,
+    regularidad,
+    requisitos,
+    certificacion,
+    inscriptos,
+    imagen,
+    descripcion,
+    inicio,
+    id,
+  } = req.body;
 
-  const updatedCourse = await updateCourseById (id, {nombre, resumen ,precio, requisitos, duracion, regularidad, certificacion, inscriptos, imagen, descripcion, inicio})
+  const updatedCourse = await updateCourseById(id, {
+    nombre,
+    resumen,
+    precio,
+    requisitos,
+    duracion,
+    regularidad,
+    certificacion,
+    inscriptos,
+    imagen,
+    descripcion,
+    inicio,
+  });
 
-  res.status(200).json({message: `Curso con ID ${id} editado exitosamente`})
-})
+  res.status(200).json({ message: `Curso con ID ${id} editado exitosamente` });
+});
 
 coursesRouter.delete('/delete', async (req, res) => {
-  const {courseId} = req.body;
-  await deleteCourseById(courseId)
+  const { courseId } = req.body;
+  await deleteCourseById(courseId);
   res.json({ message: `Curso con ID ${courseId} eliminado exitosamente` });
 });
-
 
 coursesRouter.get('/count', async (req, res) => {
   try {
@@ -79,14 +140,19 @@ coursesRouter.post('/inscripcion/:userId/:courseId', async (req, res) => {
     console.log('ID de usuario recibido:', userId);
     console.log('ID de curso recibido:', courseId);
 
-    const user = await findUserById (userId);
+    const user = await findUserById(userId);
     const course = await getCourseById(courseId);
 
     if (!user || !course) {
-      return res.status(404).json({ message: 'Datos de usuario o curso no válidos' });
+      return res
+        .status(404)
+        .json({ message: 'Datos de usuario o curso no válidos' });
     }
 
-    if (!course.students || !course.students.some(student => student.equals(userId))) {
+    if (
+      !course.students ||
+      !course.students.some((student) => student.equals(userId))
+    ) {
       course.fechaInscripcion = new Date();
       course.students = course.students || [];
       course.students.push(userId);
@@ -95,11 +161,13 @@ coursesRouter.post('/inscripcion/:userId/:courseId', async (req, res) => {
       await course.save();
       await user.save();
 
-    
-
-      return res.status(200).json({ message: 'Usuario inscrito correctamente en el curso' });
+      return res
+        .status(200)
+        .json({ message: 'Usuario inscrito correctamente en el curso' });
     } else {
-      return res.status(400).json({ message: 'El usuario ya está inscrito en este curso' });
+      return res
+        .status(400)
+        .json({ message: 'El usuario ya está inscrito en este curso' });
     }
   } catch (error) {
     console.error('Error al inscribir usuario en el curso:', error);
@@ -118,23 +186,35 @@ coursesRouter.delete('/inscripcion/:userId/:courseId', async (req, res) => {
     const course = await getCourseById(courseId);
 
     if (!user || !course) {
-      return res.status(404).json({ message: 'Datos de usuario o curso no válidos' });
+      return res
+        .status(404)
+        .json({ message: 'Datos de usuario o curso no válidos' });
     }
 
     if (course.students && course.students.includes(userId)) {
-      
-      course.students = course.students.filter(student => !student.equals(userId));
-      user.registeredCourses = user.registeredCourses.filter(course => !course.equals(courseId));
+      course.students = course.students.filter(
+        (student) => !student.equals(userId)
+      );
+      user.registeredCourses = user.registeredCourses.filter(
+        (course) => !course.equals(courseId)
+      );
 
       await course.save();
       await user.save();
 
-      return res.status(200).json({ message: 'Usuario eliminado correctamente del curso' });
+      return res
+        .status(200)
+        .json({ message: 'Usuario eliminado correctamente del curso' });
     } else {
-      return res.status(400).json({ message: 'El usuario no está inscrito en este curso' });
+      return res
+        .status(400)
+        .json({ message: 'El usuario no está inscrito en este curso' });
     }
   } catch (error) {
-    console.error('Error al eliminar la inscripción del usuario en el curso:', error);
+    console.error(
+      'Error al eliminar la inscripción del usuario en el curso:',
+      error
+    );
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 });

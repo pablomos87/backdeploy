@@ -1,7 +1,14 @@
 const express = require('express');
 const adminRouter = express.Router();
-const bcrypt = require ('bcrypt');
-const { findAdmin, isValidAdminCredentials, findAdminByAdminName, createAdmin, countAdmin, deleteAdminById } = require('../dao/controllers/adminController');
+const bcrypt = require('bcrypt');
+const {
+  findAdmin,
+  isValidAdminCredentials,
+  findAdminByAdminName,
+  createAdmin,
+  countAdmin,
+  deleteAdminById,
+} = require('../dao/controllers/adminController');
 
 adminRouter.get('/', async (req, res) => {
   try {
@@ -9,60 +16,57 @@ adminRouter.get('/', async (req, res) => {
     res.json({ admins: allAdmins });
   } catch (err) {
     console.error('Error al obtener todos los administradores:', err);
-    res.status(500).json({ error: 'Error al obtener todos los adminsitradores' });
+    res
+      .status(500)
+      .json({ error: 'Error al obtener todos los adminsitradores' });
   }
 });
 
 adminRouter.post('/register', async (req, res) => {
-    const {
-        name,
-        password,
-        confirmPassword
-    } = req.body;
-  
-    try {
-        
-        if (password !== confirmPassword) {
-            return res.status(400).json({ error: 'Las contraseñas no coinciden' });
-        }
-  
-  
-        const existingAdmin = await findAdminByAdminName(name);
-        if (existingAdmin) {
-            return res.status(400).json({ error: 'El administrador ya existe' });
-        }
-  
-        let hashedPassword = await bcrypt.hash(password, 10);
-        let hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
-  
-        await createAdmin({
-            name,
-            password: hashedPassword,
-            confirmPassword: hashedConfirmPassword,
-        }, res);
-        res.json({ message: 'Administrador registrado exitosamente' })
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ error: 'Error al registrar usuario' });
-    }  
-  });
-  
+  const { name, password, confirmPassword } = req.body;
 
+  try {
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: 'Las contraseñas no coinciden' });
+    }
+
+    const existingAdmin = await findAdminByAdminName(name);
+    if (existingAdmin) {
+      return res.status(400).json({ error: 'El administrador ya existe' });
+    }
+
+    let hashedPassword = await bcrypt.hash(password, 10);
+    let hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
+
+    await createAdmin(
+      {
+        name,
+        password: hashedPassword,
+        confirmPassword: hashedConfirmPassword,
+      },
+      res
+    );
+    res.json({ message: 'Administrador registrado exitosamente' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Error al registrar usuario' });
+  }
+});
 
 adminRouter.post('/login', async (req, res) => {
   const { name, password } = req.body;
   const admin = { name, password };
-  
+
   try {
     const result = await isValidAdminCredentials(admin);
     if (result.ok) {
-        req.session.admin =  name
+      req.session.admin = name;
       res.cookie('adminSession', JSON.stringify(admin), {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       console.log('Sesión de administrador establecida:', req.session.admin);
-      res.json({ message: 'Administrador logeado correctamente' }); 
+      res.json({ message: 'Administrador logeado correctamente' });
     } else {
       res.status(401).json({ error: result.message });
     }
@@ -87,15 +91,18 @@ adminRouter.get('/count', async (req, res) => {
     res.json({ count });
   } catch (err) {
     console.error('Error al obtener el contador de administradores:', err);
-    res.status(500).json({ error: 'Error al obtener el contador de administradores' });
+    res
+      .status(500)
+      .json({ error: 'Error al obtener el contador de administradores' });
   }
 });
 
 adminRouter.delete('/delete', async (req, res) => {
-  const {adminId} = req.body;
-  await deleteAdminById(adminId)
-  res.json({ message: `Administrador con ID ${adminId} eliminado exitosamente` });
+  const { adminId } = req.body;
+  await deleteAdminById(adminId);
+  res.json({
+    message: `Administrador con ID ${adminId} eliminado exitosamente`,
+  });
 });
-
 
 module.exports = adminRouter;
