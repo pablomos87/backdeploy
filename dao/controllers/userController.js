@@ -6,6 +6,15 @@ const findUser = async (username) => {
   return await User.find().populate('registeredCourses');
 };
 
+const getAllUsers = async () => {
+  try {
+    const allUsers = await User.find().populate('registeredCourses');
+    return allUsers;
+  } catch (err) {
+    throw new Error('Error al obtener todos los usuarios');
+  }
+};
+
 const findUserByUsername = async (username) => {
   return await User.findOne({ username });
 };
@@ -95,14 +104,103 @@ const updateUserById = async (
   );
 };
 
+const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const result = await isValidCredentials({ username, password });
+
+    if (result.ok) {
+      const userId = await getUserIdByUsername(username);
+      req.session.user = username;
+      res.json({ message: 'Logeado correctamente', userId });
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+};
+
+const logoutUser = (req, res) => {
+  try {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(500).json({ error: 'Error al cerrar sesión' });
+      } else {
+        res.clearCookie('userSession');
+        res.status(200).json({ message: 'Sesión cerrada exitosamente' });
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al cerrar sesión' });
+  }
+};
+
+const registerUser = async (req, res) => {
+  const {
+    username,
+    password,
+    confirmPassword,
+    email,
+    confirmEmail,
+    gender,
+    country,
+    city,
+    firstName,
+    fechaInclusion,
+    lastName,
+    birthDate,
+  } = req.body;
+
+  try {
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: 'Las contraseñas no coinciden' });
+    }
+
+    if (email !== confirmEmail) {
+      return res
+        .status(400)
+        .json({ error: 'Los correos electrónicos no coinciden' });
+    }
+
+    const existingUser = await findUserByUsername(username);
+    if (existingUser) {
+      return res.status(400).json({ error: 'El usuario ya existe' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+      username,
+      password: hashedPassword,
+      email,
+      gender,
+      country,
+      city,
+      firstName,
+      fechaInclusion,
+      lastName,
+      birthDate,
+    };
+
+    await createUser(newUser);
+    res.json({ message: 'Registrado exitosamente' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error al registrar usuario' });
+  }
+};
+
 module.exports = {
   findUserById,
   findUser,
   findUserByUsername,
-  createUser,
-  isValidCredentials,
   countUsers,
   deleteUserById,
   getUserIdByUsername,
   updateUserById,
+  loginUser,
+  registerUser,
+  getAllUsers,
+  logoutUser,
 };
