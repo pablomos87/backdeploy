@@ -101,7 +101,10 @@ userRouter.post('/login', async (req, res) => {
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
       req.session.user = username
-      res.cookie('userSession', JSON.stringify(user));
+      res.cookie('userSession', JSON.stringify(user), {
+        sameSite: 'none', 
+        secure: true  
+      });
       console.log('Sesión establecida:', req.session.user);
       console.log('Configuración de la cookie userSession:', res.getHeaders()['set-cookie']);
       res.json({ message: 'Logeado correctamente', userId }); 
@@ -121,15 +124,6 @@ userRouter.get('/user/info', (req, res) => {
   } else {
     
     res.status(401).json({ error: 'No autenticado' });
-  }
-});
-
-userRouter.post('/logout', (req, res) => {
-  if (req.cookies.userSession) {
-    res.clearCookie('userSession');
-    res.json({ message: 'Sesión cerrada exitosamente' });
-  } else {
-    res.status(401).json({ error: 'No hay sesión activa' });
   }
 });
 

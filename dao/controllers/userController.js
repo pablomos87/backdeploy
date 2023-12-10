@@ -8,7 +8,6 @@ const findUser =  async (username) => {
 };
 
 
-
 const findUserByUsername =  async (username) => {
     return await User.findOne({username})
 };
