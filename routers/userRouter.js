@@ -1,6 +1,7 @@
 const express = require('express');
 const userRouter = express.Router();
-const authenticateUser = require ('../middleweres/sessionMiddlewere')
+const authenticateToken = require ('../middleweres/tokenMiddlewere');
+const authenticateAdminToken = require ('../middleweres/tokenMiddlewere');
 const {
   getAllUsers,
   findUserByUsername,
@@ -9,11 +10,10 @@ const {
   updateUserById,
   loginUser,
   registerUser,
-  logoutUser,
 } = require('../dao/controllers/userController');
 const bcrypt = require('bcrypt');
 
-userRouter.get('/', authenticateUser, async (req, res) => {
+userRouter.get('/', authenticateToken, async (req, res) => {
   try {
     const allUsers = await getAllUsers();
     res.json({ users: allUsers });
@@ -23,7 +23,7 @@ userRouter.get('/', authenticateUser, async (req, res) => {
   }
 });
 
-userRouter.get('/byusername', authenticateUser, async (req, res) => {
+userRouter.get('/byusername', authenticateToken, async (req, res) => {
   const { username } = req.query;
 
   try {
@@ -46,11 +46,7 @@ userRouter.post('/register', registerUser);
 
 userRouter.post('/login', loginUser);
 
-userRouter.post('/logout',logoutUser);
-
-
-
-userRouter.get('/count', async (req, res) => {
+userRouter.get('/count', authenticateAdminToken, async (req, res) => {
   try {
     const count = await countUsers();
     res.json({ count });
@@ -60,13 +56,13 @@ userRouter.get('/count', async (req, res) => {
   }
 });
 
-userRouter.delete('/delete', async (req, res) => {
+userRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
   const { userId } = req.body;
   await deleteUserById(userId);
   res.json({ message: `User con ID ${userId} eliminado exitosamente` });
 });
 
-userRouter.get('/users-courses',authenticateUser, async (req, res) => {
+userRouter.get('/users-courses',authenticateToken, async (req, res) => {
 
   try {
     const usersWithCourses = await findUserWithCourses();
@@ -79,7 +75,7 @@ userRouter.get('/users-courses',authenticateUser, async (req, res) => {
   }
 });
 
-userRouter.post('/edit', authenticateUser, async (req, res) => {  
+userRouter.post('/edit', authenticateToken, async (req, res) => {  
   const {
     firstName,
     lastName,

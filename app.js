@@ -2,11 +2,10 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
-const cookieParser = require ('cookie-parser');
 const adminRouter = require('./routers/adminRouter.js');
 const userRouter = require('./routers/userRouter.js');
 const coursesRouter = require('./routers/coursesRouter.js');
-const session = require('express-session');
+
 
 
 const app = express();

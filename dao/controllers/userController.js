@@ -1,6 +1,12 @@
 const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const moment = require('moment-timezone');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
+
+
+const TOKEN_SECRET = process.env.TOKEN_SECRET
 
 const findUser = async (username) => {
   return await User.find().populate('registeredCourses');
@@ -104,6 +110,7 @@ const updateUserById = async (
   );
 };
 
+
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
 
@@ -112,28 +119,15 @@ const loginUser = async (req, res) => {
 
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
-      req.session.user = { user };
-      res.json({ message: 'Logeado correctamente', userId:  req.session.user });
+      const token = jwt.sign({ userId, username, password }, TOKEN_SECRET, { expiresIn: '7d' });
+      console.log('El token es:', token);
+      console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
+      res.json({ message: 'Logeado correctamente', token, userId });
     } else {
       throw new Error(result.message);
     }
   } catch (error) {
     res.status(401).json({ error: error.message });
-  }
-};
-
-const logoutUser = (req, res) => {
-  try {
-    req.session.destroy((err) => {
-      if (err) {
-        res.status(500).json({ error: 'Error al cerrar sesión' });
-      } else {
-        res.clearCookie('userSession');
-        res.status(200).json({ message: 'Sesión cerrada exitosamente' });
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Error al cerrar sesión' });
   }
 };
 
@@ -202,5 +196,4 @@ module.exports = {
   loginUser,
   registerUser,
   getAllUsers,
-  logoutUser,
 };

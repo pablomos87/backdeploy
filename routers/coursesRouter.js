@@ -8,9 +8,12 @@ const {
   getRandomCourses,
 } = require('../dao/controllers/coursesController');
 const { findUserById } = require('../dao/controllers/userController');
+const authenticateAdminToken = require ('../middleweres/tokenMiddlewere');
+const authenticateToken = require ('../middleweres/tokenMiddlewere');
 const coursesRouter = express.Router();
 
-coursesRouter.post('/newcourse', async (req, res) => {
+
+coursesRouter.post('/newcourse', authenticateAdminToken, async (req, res) => {
   try {
     const {
       nombre,
@@ -84,7 +87,7 @@ coursesRouter.get('/detail', async (req, res) => {
   }
 });
 
-coursesRouter.post('/edit', async (req, res) => {
+coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
   const {
     nombre,
     resumen,
@@ -117,7 +120,7 @@ coursesRouter.post('/edit', async (req, res) => {
   res.status(200).json({ message: `Curso con ID ${id} editado exitosamente` });
 });
 
-coursesRouter.delete('/delete', async (req, res) => {
+coursesRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
   const { courseId } = req.body;
   await deleteCourseById(courseId);
   res.json({ message: `Curso con ID ${courseId} eliminado exitosamente` });
@@ -133,7 +136,7 @@ coursesRouter.get('/count', async (req, res) => {
   }
 });
 
-coursesRouter.post('/inscripcion/:userId/:courseId', async (req, res) => {
+coursesRouter.post('/inscripcion/:userId/:courseId', authenticateToken, async (req, res) => {
   try {
     const { userId, courseId } = req.params;
 
@@ -175,7 +178,7 @@ coursesRouter.post('/inscripcion/:userId/:courseId', async (req, res) => {
   }
 });
 
-coursesRouter.delete('/inscripcion/:userId/:courseId', async (req, res) => {
+coursesRouter.delete('/inscripcion/:userId/:courseId', authenticateAdminToken, async (req, res) => {
   try {
     const { userId, courseId } = req.params;
 
