@@ -6,29 +6,13 @@ const adminRouter = require('./routers/adminRouter.js');
 const userRouter = require('./routers/userRouter.js');
 const coursesRouter = require('./routers/coursesRouter.js');
 
-
-
 const app = express();
-app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors({
-origin: ['http://localhost:3000', 'https://frontdeploy-pablomos87.vercel.app', 'https://frontdeploy-gold.vercel.app', 'https://frontdeploy-git-master-pablomos87.vercel.app/'],
+origin: 'http://localhost:3000',
   credentials: true,
 })); 
-
-app.use(session({
-  secret: 'mi-clave',
-  resave: false, 
-  saveUninitialized: false, 
-  cookie: {
-    maxAge: 7 * 24 * 60 * 60 * 1000, 
-    sameSite: 'none',
-    secure: true,
-    name: 'userSession',
-    httpOnly: true,
-  },
-}));
 
 
 app.use(express.urlencoded({ extended: false }));
