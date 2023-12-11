@@ -1,5 +1,6 @@
 const Admin = require("../models/admin")
 const bcrypt = require ('bcrypt');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -90,10 +91,10 @@ const countAdmin =  async (admin) =>{
         const { name, password } = req.body;
       
         try {
-          const result = await isValidAdminCredentials(admin);
+          const result = await isValidAdminCredentials({ name, password }); // Reemplazar admin con name
       
           if (result.ok) {
-            const adimnId = await findAdminByAdminName(name);
+            const adminId = await findAdminByAdminName(name);
             const adminToken = jwt.sign({ adminId, name, password }, TOKEN_SECRET, { expiresIn: '7d' });
             console.log('El token es:', adminToken);
             console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
