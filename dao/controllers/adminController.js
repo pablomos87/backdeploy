@@ -91,7 +91,7 @@ const countAdmin =  async (admin) =>{
             res.json({ message: 'Administrador registrado exitosamente' })
         } catch (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Error al registrar usuario' });
+            return res.status(500).json({ error: 'Error al registrar adminstrador' });
         }  
     };
 
