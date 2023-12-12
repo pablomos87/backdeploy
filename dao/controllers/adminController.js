@@ -15,7 +15,7 @@ const findAdminByAdminName =  async (name) => {
     return await Admin.findOne({name})
 };
 
-const getAdminIdByAdminName = async (username) => {
+const getAdminIdByAdminName = async (name) => {
     const admin = await Admin.findOne({ name });
     console.log('Admin encontrado:', admin);
     if (admin) {
