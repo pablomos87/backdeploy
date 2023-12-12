@@ -27,11 +27,15 @@ adminRouter.get('/count', authenticateAdminToken, async (req, res) => {
   }
 });
 
-adminRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
-  const {adminId} = req.body;
-  await deleteAdminById(adminId)
-  res.json({ message: `Administrador con ID ${adminId} eliminado exitosamente` });
+adminRouter.delete('/delete/:adminId', authenticateAdminToken, async (req, res) => {
+  const { adminId } = req.params; // Obtener el ID del parámetro de la URL
+  try {
+    await deleteAdminById(adminId);
+    res.json({ message: `Administrador con ID ${adminId} eliminado exitosamente` });
+  } catch (error) {
+    console.error('Error al eliminar el administrador:', error);
+    res.status(500).json({ error: 'Error al eliminar el administrador' });
+  }
 });
-
 
 module.exports = adminRouter;

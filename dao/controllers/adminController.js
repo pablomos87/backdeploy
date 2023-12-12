@@ -56,9 +56,8 @@ const countAdmin =  async (admin) =>{
 
 
     const deleteAdminById = async (adminId) => {
-        return await Admin.findByIdAndDelete(adminId)
+      return await Admin.findByIdAndDelete(adminId);
     };
-    
 
     const registerAdmin = async (req, res) => {
         const {
