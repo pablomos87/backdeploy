@@ -75,7 +75,7 @@ const countAdmin =  async (admin) =>{
             return res.status(400).json({ error: 'Las contraseñas no coinciden' });
           }
 
-        const existingAdmin = await findAdminByAdminName(adminId);
+        const existingAdmin = await findAdminByAdminName(name);
           if (existingAdmin) {
               return res.status(400).json({ error: 'El administrador ya existe' });
           }
@@ -102,7 +102,7 @@ const countAdmin =  async (admin) =>{
           const result = await isValidAdminCredentials({ name, password }); 
       
           if (result.ok) {
-            const adminId = await getAdminIdByAdminname(name);
+            const adminId = await getAdminIdByAdminname(adminId);
             const adminToken = jwt.sign({ adminId, name, password }, TOKEN_SECRET, { expiresIn: '7d' });
             console.log('El token es:', adminToken);
             console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
