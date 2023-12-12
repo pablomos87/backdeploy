@@ -99,7 +99,7 @@ const countAdmin =  async (admin) =>{
         const { name, password } = req.body;
       
         try {
-          const result = await isValidAdminCredentials({ name: name, password: password });
+          const result = await isValidAdminCredentials({ name, password });
       
           if (result.ok) {
             const adminId = await getAdminIdByAdminName(name);
