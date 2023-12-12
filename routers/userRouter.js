@@ -13,7 +13,7 @@ const {
 } = require('../dao/controllers/userController');
 const bcrypt = require('bcrypt');
 
-userRouter.get('/', authenticateToken, async (req, res) => {
+userRouter.get('/', authenticateToken, authenticateAdminToken, async (req, res) => {
   try {
     const allUsers = await getAllUsers();
     res.json({ users: allUsers });
@@ -23,7 +23,7 @@ userRouter.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-userRouter.get('/byusername', authenticateToken, async (req, res) => {
+userRouter.get('/byusername', authenticateToken, authenticateAdminToken, async (req, res) => {
   const { username } = req.query;
 
   try {
@@ -62,7 +62,7 @@ userRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
   res.json({ message: `User con ID ${userId} eliminado exitosamente` });
 });
 
-userRouter.get('/users-courses',authenticateToken, async (req, res) => {
+userRouter.get('/users-courses', authenticateToken, authenticateAdminToken, async (req, res) => {
 
   try {
     const usersWithCourses = await findUserWithCourses();
