@@ -75,7 +75,7 @@ const countAdmin =  async (admin) =>{
             return res.status(400).json({ error: 'Las contraseñas no coinciden' });
           }
 
-        const existingAdmin = await findAdminByAdminName(name);
+        const existingAdmin = await findAdminByAdminName(adminId);
           if (existingAdmin) {
               return res.status(400).json({ error: 'El administrador ya existe' });
           }
