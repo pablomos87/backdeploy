@@ -129,7 +129,7 @@ coursesRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
   res.json({ message: `Curso con ID ${courseId} eliminado exitosamente` });
 });
 
-coursesRouter.get('/count', authenticateAdminToken, getCourseCount);
+coursesRouter.get('/count', getCourseCount);
 
 coursesRouter.post('/inscripcion/:userId/:courseId', authenticateToken, registerUserCourses);
 

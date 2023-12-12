@@ -71,7 +71,7 @@ const getRandomCourses = async () => {
 
 const getCourseCount = async (req, res) => {
   try {
-    const count = await Courses.countDocuments();
+    const count = await Course.countDocuments();
     res.json({ count });
   } catch (err) {
     console.error('Error al obtener el contador de cursos:', err);
