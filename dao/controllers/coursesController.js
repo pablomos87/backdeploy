@@ -69,6 +69,80 @@ const getRandomCourses = async () => {
   return await Course.aggregate([{ $sample: { size: 3 } }]);
 };
 
+const getCourseCount = async (req, res) => {
+  try {
+    const count = await Courses.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    console.error('Error al obtener el contador de cursos:', err);
+    res.status(500).json({ error: 'Error al obtener el contador de usuarios' });
+  }
+};
+
+
+const registerUserCourses = async (req, res) => {
+  try {
+    const { userId, courseId } = req.params;
+
+    const user = await findUserById(userId);
+    const course = await getCourseById(courseId);
+
+    if (!user || !course) {
+      return res.status(404).json({ message: 'Datos de usuario o curso no válidos' });
+    }
+
+    if (!course.students || !course.students.some((student) => student.equals(userId))) {
+      course.fechaInscripcion = new Date();
+      course.students = course.students || [];
+      course.students.push(userId);
+      user.registeredCourses.push(courseId);
+
+      await course.save();
+      await user.save();
+
+      return res.status(200).json({ message: 'Usuario inscrito correctamente en el curso' });
+    } else {
+      return res.status(400).json({ message: 'El usuario ya está inscrito en este curso' });
+    }
+  } catch (error) {
+    console.error('Error al inscribir usuario en el curso:', error);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+
+const removeUserCoursesRegistration = async (req, res) => {
+  try {
+    const { userId, courseId } = req.params;
+
+    console.log('ID de usuario recibido:', userId);
+    console.log('ID de curso recibido:', courseId);
+
+    const user = await findUserById(userId);
+    const course = await getCourseById(courseId);
+
+    if (!user || !course) {
+      return res.status(404).json({ message: 'Datos de usuario o curso no válidos' });
+    }
+
+    if (course.students && course.students.includes(userId)) {
+      course.students = course.students.filter((student) => !student.equals(userId));
+      user.registeredCourses = user.registeredCourses.filter((course) => !course.equals(courseId));
+
+      await course.save();
+      await user.save();
+
+      return res.status(200).json({ message: 'Usuario eliminado correctamente del curso' });
+    } else {
+      return res.status(400).json({ message: 'El usuario no está inscrito en este curso' });
+    }
+  } catch (error) {
+    console.error('Error al eliminar la inscripción del usuario en el curso:', error);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+
 module.exports = {
   createCourse,
   getCourses,
@@ -76,4 +150,7 @@ module.exports = {
   updateCourseById,
   deleteCourseById,
   getRandomCourses,
+  getCourseCount,
+  registerUserCourses,
+  removeUserCoursesRegistration
 };
