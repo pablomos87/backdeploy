@@ -1,6 +1,6 @@
 const express = require('express');
 const adminRouter = express.Router();
-const authenticateAdminToken = require ('../middleweres/tokenMiddlewere')
+const authenticateAdminToken = require ('../middleweres/tokenMiddlewere');
 const { findAdmin, countAdmin, deleteAdminById, loginAdmin, registerAdmin } = require('../dao/controllers/adminController');
 
 adminRouter.get('/', authenticateAdminToken, async (req, res) => {

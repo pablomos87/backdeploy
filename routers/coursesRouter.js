@@ -126,7 +126,7 @@ coursesRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
   res.json({ message: `Curso con ID ${courseId} eliminado exitosamente` });
 });
 
-coursesRouter.get('/count', authenticateToken, async (req, res) => {
+coursesRouter.get('/count', authenticateAdminToken, async (req, res) => {
   try {
     const count = await Courses.countDocuments();
     res.json({ count });
