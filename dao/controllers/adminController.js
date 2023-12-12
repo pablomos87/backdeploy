@@ -77,18 +77,19 @@ const countAdmin =  async (admin) =>{
               return res.status(400).json({ error: 'El administrador ya existe' });
           }
       
-        let hashedPassword = await bcrypt.hash(password, 10);
+          let hashedPassword = await bcrypt.hash(password, 10);
+
+          await createAdmin({
+            name,
+            password: hashedPassword,
+          });
       
-            await createAdmin({
-                name,
-                password: hashedPassword,
-            }, res);
-            res.json({ message: 'Administrador registrado exitosamente' })
+          res.json({ message: 'Administrador registrado exitosamente' });
         } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Error al registrar adminstrador' });
-        }  
-    };
+          console.error(err);
+          return res.status(500).json({ error: 'Error al registrar administrador' });
+        }
+      };
 
     const loginAdmin = async (req, res) => {
         const { name, password } = req.body;
