@@ -27,14 +27,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    confirmPassword: {
-        type: String,
-        required: true
-    },
-    confirmEmail: {
-        type: String,
-        required: true
-    },
+    
     firstName: {
         type: String,
         required: true

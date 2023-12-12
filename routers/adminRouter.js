@@ -13,7 +13,7 @@ adminRouter.get('/', authenticateAdminToken, async (req, res) => {
   }
 });
 
-adminRouter.post('/register', authenticateAdminToken, registerAdmin);
+adminRouter.post('/register', authenticateAdminToken,  registerAdmin);
 
 adminRouter.post('/login', loginAdmin);
 

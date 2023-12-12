@@ -37,7 +37,7 @@ const authenticateAdminToken = (req, res, next) => {
   console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
 
   if (!adminToken) {
-    console.log('AdminToken de adminsitrador no proporcionado');
+    console.log('AdminToken de administrador no proporcionado');
     return res.status(401).json({ message: 'AdminToken de administrador no proporcionado' });
   }
 

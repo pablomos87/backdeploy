@@ -10,7 +10,6 @@ const findAdmin =  async (name) => {
     return await Admin.find ()
 };
 
-
 const findAdminByAdminName =  async (name) => {
     return await Admin.findOne({name})
 };
@@ -28,7 +27,6 @@ const createAdmin = async  (admin) =>{
     const newAdmin = new Admin (admin)
     return await newAdmin.save()
 };
-
 
 const isValidAdminCredentials = async (admin) =>{
     try {
@@ -69,7 +67,6 @@ const countAdmin =  async (admin) =>{
             confirmPassword
         } = req.body;
       
-      
         try {
           if (password !== confirmPassword) {
             return res.status(400).json({ error: 'Las contraseñas no coinciden' });
@@ -81,12 +78,10 @@ const countAdmin =  async (admin) =>{
           }
       
         let hashedPassword = await bcrypt.hash(password, 10);
-        let hashedConfirmPassword = await bcrypt.hash(confirmPassword, 10);
       
             await createAdmin({
                 name,
                 password: hashedPassword,
-                confirmPassword: hashedConfirmPassword,
             }, res);
             res.json({ message: 'Administrador registrado exitosamente' })
         } catch (err) {
