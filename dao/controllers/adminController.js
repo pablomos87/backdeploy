@@ -15,6 +15,14 @@ const findAdminByAdminName =  async (name) => {
     return await Admin.findOne({name})
 };
 
+const getAdminIdByAdminname = async (username) => {
+    const user = await Admin.findOne({ Name });
+    console.log('Admin encontrado:', admin);
+    if (admin) {
+      return admin._id;
+    }
+  };
+
 const createAdmin = async  (admin) =>{
 
     const newAdmin = new Admin (admin)
@@ -91,10 +99,10 @@ const countAdmin =  async (admin) =>{
         const { name, password } = req.body;
       
         try {
-          const result = await isValidAdminCredentials({ name, password }); // Reemplazar admin con name
+          const result = await isValidAdminCredentials({ name, password }); 
       
           if (result.ok) {
-            const adminId = await findAdminByAdminName(name);
+            const adminId = await getAdminIdByAdminname(name);
             const adminToken = jwt.sign({ adminId, name, password }, TOKEN_SECRET, { expiresIn: '7d' });
             console.log('El token es:', adminToken);
             console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
