@@ -15,8 +15,8 @@ const findAdminByAdminName =  async (name) => {
     return await Admin.findOne({name})
 };
 
-const getAdminIdByAdminname = async (username) => {
-    const user = await Admin.findOne({ Name });
+const getAdminIdByAdminName = async (username) => {
+    const admin = await Admin.findOne({ name });
     console.log('Admin encontrado:', admin);
     if (admin) {
       return admin._id;
@@ -102,7 +102,7 @@ const countAdmin =  async (admin) =>{
           const result = await isValidAdminCredentials({ name: name, password: password });
       
           if (result.ok) {
-            const adminId = await getAdminIdByAdminname(name);
+            const adminId = await getAdminIdByAdminName(name);
             const adminToken = jwt.sign({ adminId, name, password }, TOKEN_SECRET, { expiresIn: '7d' });
             console.log('El token es:', adminToken);
             console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
