@@ -118,10 +118,10 @@ const loginUser = async (req, res) => {
 
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
-      const token = jwt.sign({ userId, username, password }, TOKEN_SECRET, { expiresIn: '7d' });
-      console.log('El token es:', token);
+      const userToken = jwt.sign({ userId, username, password }, TOKEN_SECRET, { expiresIn: '7d' });
+      console.log('El token es:', userToken);
       console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
-      res.json({ message: 'Logeado correctamente', token, userId });
+      res.json({ message: 'Logeado correctamente', userToken, userId });
     } else {
       throw new Error(result.message);
     }
