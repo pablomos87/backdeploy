@@ -132,7 +132,7 @@ coursesRouter.get('/count', authenticateAdminToken, getCourseCount);
 
 coursesRouter.post('/inscripcion/:userId/:courseId', authenticateToken, registerUserCourses);
 
-coursesRouter.delete('/inscripcion/:userId/:courseId', authenticateToken, removeUserCoursesRegistration);
+coursesRouter.delete('/inscripcion/:userId/:courseId', authenticateAdminToken, removeUserCoursesRegistration);
 
 coursesRouter.get('/random', async (req, res) => {
   try {
