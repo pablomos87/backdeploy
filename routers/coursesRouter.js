@@ -131,7 +131,7 @@ coursesRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
 
 coursesRouter.get('/count', authenticateAdminToken, getCourseCount);
 
-coursesRouter.post('/inscripcion/:userId/:courseId', authenticateToken);
+coursesRouter.post('/inscripcion/:userId/:courseId', authenticateToken, registerUserCourses);
 
 coursesRouter.delete('/inscripcion/:userId/:courseId', authenticateAdminToken, removeUserCoursesRegistration);
 
