@@ -1,4 +1,5 @@
 const Course = require('../../dao/models/courses');
+const { findUserById } = require('./userController');
 
 const createCourse = async (course) => {
   try {

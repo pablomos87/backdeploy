@@ -10,7 +10,6 @@ const {
   registerUserCourses,
   removeUserCoursesRegistration,
 } = require('../dao/controllers/coursesController');
-const { findUserById } = require('../dao/controllers/userController');
 const authenticateAdminToken = require ('../middleweres/tokenMiddlewere');
 const authenticateToken = require ('../middleweres/tokenMiddlewere');
 const coursesRouter = express.Router();
