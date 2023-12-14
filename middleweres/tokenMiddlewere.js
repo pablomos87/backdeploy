@@ -54,4 +54,4 @@ const authenticateAdminToken = (req, res, next) => {
   });
 };
 
-module.exports = authenticateToken; authenticateAdminToken;
+module.exports = authenticateAdminToken;
