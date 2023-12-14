@@ -143,6 +143,28 @@ const removeUserCoursesRegistration = async (req, res) => {
   }
 };
 
+const searchCourses = async (req, res) => {
+  try {
+    const { query } = req.query; 
+    const cursosEncontrados = await Course.find({
+      $or: [
+        { nombre: { $regex: new RegExp(query, 'i') } },
+        { resumen: { $regex: new RegExp(query, 'i') } }
+      ]
+    });
+
+    if (cursosEncontrados.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron cursos con ese término de búsqueda.' });
+    }
+
+    res.status(200).json({ cursosEncontrados });
+  } catch (error) {
+    console.error('Error al buscar cursos:', error);
+    res.status(500).json({ message: 'Hubo un error al buscar cursos.' });
+  }
+};
+
+module.exports = { buscarCursos };
 
 module.exports = {
   createCourse,
@@ -153,5 +175,6 @@ module.exports = {
   getRandomCourses,
   getCourseCount,
   registerUserCourses,
-  removeUserCoursesRegistration
+  removeUserCoursesRegistration,
+  searchCourses
 };

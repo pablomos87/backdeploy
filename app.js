@@ -10,7 +10,7 @@ const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(cors({
-origin: ['http://localhost:3000', 'https://frontdeploy-pablomos87.vercel.app', 'https://frontdeploy-gold.vercel.app'],
+origin: ['http://localhost:3000', 'https://frontdeploy-pablomos87.vercel.app', 'https://frontdeploy-gold.vercel.app', 'https://frontdeploy-git-master-pablomos87.vercel.app', 'frontdeploy-al3q3b1k9-pablomos87.vercel.app'],
   credentials: true,
 })); 
 
