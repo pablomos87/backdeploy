@@ -27,34 +27,42 @@ const getCourseById = async (courseId) => {
   return course;
 };
 
-const updateCourseById = async (id, updatedFields) => {
-  try {
-    const updatedCourse = await Course.findByIdAndUpdate(
-      id,
-      { ...updatedFields },
-      { new: true }
-    );
-    return updatedCourse;
-  } catch (error) {
-    throw new Error(`Error al actualizar el curso: ${error.message}`);
+const updateCourseById = async (
+  id,
+  {
+    nombre,
+    resumen,
+    requisitos,
+    palabrasClave,
+    precio,
+    duracion,
+    regularidad,
+    certificacion,
+    inscriptos,
+    imagen,
+    descripcion,
+    inicio,
   }
+) => {
+  return await Course.findByIdAndUpdate(
+    id,
+    {
+      nombre,
+      resumen,
+      requisitos,
+      palabrasClave,
+      precio,
+      duracion,
+      regularidad,
+      certificacion,
+      inscriptos,
+      imagen,
+      descripcion,
+      inicio,
+    },
+    { new: true }
+  );
 };
-
-const updatedCourse = await updateCourseById(id, {
-  nombre,
-  resumen,
-  palabrasClave,
-  requisitos,
-  precio,
-  duracion,
-  regularidad,
-  certificacion,
-  inscriptos,
-  imagen,
-  descripcion,
-  inicio,
-});
-
 
 const deleteCourseById = async (courseId) => {
   return await Course.findByIdAndDelete(courseId);
@@ -74,7 +82,6 @@ const getCourseCount = async (req, res) => {
   }
 };
 
-
 const registerUserCourses = async (req, res) => {
   try {
     const { userId, courseId } = req.params;
@@ -83,10 +90,15 @@ const registerUserCourses = async (req, res) => {
     const course = await getCourseById(courseId);
 
     if (!user || !course) {
-      return res.status(404).json({ message: 'Datos de usuario o curso no válidos' });
+      return res
+        .status(404)
+        .json({ message: 'Datos de usuario o curso no válidos' });
     }
 
-    if (!course.students || !course.students.some((student) => student.equals(userId))) {
+    if (
+      !course.students ||
+      !course.students.some((student) => student.equals(userId))
+    ) {
       course.fechaInscripcion = new Date();
       course.students = course.students || [];
       course.students.push(userId);
@@ -95,16 +107,21 @@ const registerUserCourses = async (req, res) => {
       await course.save();
       await user.save();
 
-      return res.status(200).json({ message: 'Usuario inscrito correctamente en el curso' });
+      return res
+        .status(200)
+        .json({ message: 'Usuario inscrito correctamente en el curso' });
     } else {
-      return res.status(400).json({ message: 'El usuario ya está inscrito en este curso' });
+      return res
+        .status(400)
+        .json({ message: 'El usuario ya está inscrito en este curso' });
     }
   } catch (error) {
     console.error('Error al inscribir usuario en el curso:', error);
-    return res.status(500).json({ message: 'Error interno del servidor', error: error.message });
+    return res
+      .status(500)
+      .json({ message: 'Error interno del servidor', error: error.message });
   }
 };
-
 
 const removeUserCoursesRegistration = async (req, res) => {
   try {
@@ -117,22 +134,35 @@ const removeUserCoursesRegistration = async (req, res) => {
     const course = await getCourseById(courseId);
 
     if (!user || !course) {
-      return res.status(404).json({ message: 'Datos de usuario o curso no válidos' });
+      return res
+        .status(404)
+        .json({ message: 'Datos de usuario o curso no válidos' });
     }
 
     if (course.students && course.students.includes(userId)) {
-      course.students = course.students.filter((student) => !student.equals(userId));
-      user.registeredCourses = user.registeredCourses.filter((course) => !course.equals(courseId));
+      course.students = course.students.filter(
+        (student) => !student.equals(userId)
+      );
+      user.registeredCourses = user.registeredCourses.filter(
+        (course) => !course.equals(courseId)
+      );
 
       await course.save();
       await user.save();
 
-      return res.status(200).json({ message: 'Usuario eliminado correctamente del curso' });
+      return res
+        .status(200)
+        .json({ message: 'Usuario eliminado correctamente del curso' });
     } else {
-      return res.status(400).json({ message: 'El usuario no está inscrito en este curso' });
+      return res
+        .status(400)
+        .json({ message: 'El usuario no está inscrito en este curso' });
     }
   } catch (error) {
-    console.error('Error al eliminar la inscripción del usuario en el curso:', error);
+    console.error(
+      'Error al eliminar la inscripción del usuario en el curso:',
+      error
+    );
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
@@ -143,8 +173,8 @@ const searchCourses = async (req, res) => {
 
     const courses = await Course.find({
       $or: [
-        { nombre: { $regex: query, $options: 'i' } }, 
-        { palabrasClave: { $regex: query, $options: 'i' } }, 
+        { nombre: { $regex: query, $options: 'i' } },
+        { palabrasClave: { $regex: query, $options: 'i' } },
       ],
     });
 
@@ -164,5 +194,5 @@ module.exports = {
   getCourseCount,
   registerUserCourses,
   removeUserCoursesRegistration,
-  searchCourses 
+  searchCourses,
 };

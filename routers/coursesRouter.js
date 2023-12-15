@@ -11,10 +11,9 @@ const {
   removeUserCoursesRegistration,
   searchCourses,
 } = require('../dao/controllers/coursesController');
-const authenticateAdminToken = require ('../middleweres/tokenMiddlewere');
-const authenticateToken = require ('../middleweres/tokenMiddlewere');
+const authenticateAdminToken = require('../middleweres/tokenMiddlewere');
+const authenticateToken = require('../middleweres/tokenMiddlewere');
 const coursesRouter = express.Router();
-
 
 coursesRouter.post('/newcourse', authenticateAdminToken, async (req, res) => {
   try {
@@ -96,12 +95,9 @@ coursesRouter.get('/detail', async (req, res) => {
 coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
   const {
     nombre,
-    resumen,
     precio,
-    palabrasClave,
     duracion,
     regularidad,
-    requisitos,
     certificacion,
     inscriptos,
     imagen,
@@ -110,22 +106,35 @@ coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
     id,
   } = req.body;
 
-  const updatedCourse = await updateCourseById(id, {
-    nombre,
-    resumen,
-    precio,
-    palabrasClave,
-    requisitos,
-    duracion,
-    regularidad,
-    certificacion,
-    inscriptos,
-    imagen,
-    descripcion,
-    inicio,
-  });
+  const updatedCourse = await updateCourseById(
+    id,
+    {
+      nombre,
+      precio,
+      duracion,
+      regularidad,
+      certificacion,
+      inscriptos,
+      imagen,
+      descripcion,
+      inicio,
+    },
+    { new: true }
+  );
 
-  res.status(200).json({ message: `Curso con ID ${id} editado exitosamente` });
+  if (updatedCourse) {
+    res.json({ message: 'Curso actualizado exitosamente' });
+    console.log('Curso actualizado');
+  } else {
+    res.json('Error al actualizar el curso');
+    console.log('Error al actualizar el curso');
+  }
+});
+
+coursesRouter.delete('/delete', async (req, res) => {
+  const { courseId } = req.body;
+  await deleteCourseById(courseId);
+  res.json({ message: `Curso con ID ${courseId} eliminado exitosamente` });
 });
 
 coursesRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
@@ -136,9 +145,17 @@ coursesRouter.delete('/delete', authenticateAdminToken, async (req, res) => {
 
 coursesRouter.get('/count', authenticateAdminToken, getCourseCount);
 
-coursesRouter.post('/inscripcion/:userId/:courseId', authenticateToken, registerUserCourses);
+coursesRouter.post(
+  '/inscripcion/:userId/:courseId',
+  authenticateToken,
+  registerUserCourses
+);
 
-coursesRouter.delete('/inscripcion/:userId/:courseId', authenticateAdminToken, removeUserCoursesRegistration);
+coursesRouter.delete(
+  '/inscripcion/:userId/:courseId',
+  authenticateAdminToken,
+  removeUserCoursesRegistration
+);
 
 coursesRouter.get('/random', async (req, res) => {
   try {
@@ -155,7 +172,9 @@ coursesRouter.get('/search', async (req, res) => {
     const { query } = req.query;
 
     if (!query) {
-      return res.status(400).json({ error: 'La consulta de búsqueda está vacía' });
+      return res
+        .status(400)
+        .json({ error: 'La consulta de búsqueda está vacía' });
     }
 
     await searchCourses(req, res);
