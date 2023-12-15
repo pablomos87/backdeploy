@@ -5,6 +5,7 @@ const cors = require('cors');
 const adminRouter = require('./routers/adminRouter.js');
 const userRouter = require('./routers/userRouter.js');
 const coursesRouter = require('./routers/coursesRouter.js');
+const visitsRouter = require('./routers/visitsRouter.js');
 
 const app = express();
 app.use(logger('dev'));
@@ -27,11 +28,6 @@ app.get('/', (req, res) => {
 app.use('/users', userRouter);
 app.use('/courses',  coursesRouter);
 app.use('/admin', adminRouter);
-
-let visitCount = 0;
-
-app.get('/counter', (req, res) => {
-  res.json({ count: visitCount });
-});
+app.use('/visits', visitsRouter);
 
 module.exports = app;
