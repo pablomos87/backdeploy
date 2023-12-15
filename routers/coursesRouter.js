@@ -92,12 +92,13 @@ coursesRouter.get('/detail', async (req, res) => {
   }
 });
 
-coursesRouter.post('/edit', async (req, res) => {
+coursesRouter.post('/edit',authenticateAdminToken, async (req, res) => {
   const {
     nombre,
     resumen,
     precio,
     duracion,
+    palabrasClave,
     regularidad,
     requisitos,
     certificacion,
@@ -113,6 +114,7 @@ coursesRouter.post('/edit', async (req, res) => {
     resumen,
     precio,
     requisitos,
+    palabrasClave,
     duracion,
     regularidad,
     certificacion,
