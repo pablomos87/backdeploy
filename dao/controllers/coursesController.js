@@ -27,42 +27,34 @@ const getCourseById = async (courseId) => {
   return course;
 };
 
-const updateCourseById = async (
-  id,
-  {
-    nombre,
-    resumen,
-    palabrasClave,
-    requisitos,
-    precio,
-    duracion,
-    regularidad,
-    certificacion,
-    inscriptos,
-    imagen,
-    descripcion,
-    inicio,
+const updateCourseById = async (id, updatedFields) => {
+  try {
+    const updatedCourse = await Course.findByIdAndUpdate(
+      id,
+      { ...updatedFields },
+      { new: true }
+    );
+    return updatedCourse;
+  } catch (error) {
+    throw new Error(`Error al actualizar el curso: ${error.message}`);
   }
-) => {
-  return await Course.findByIdAndUpdate(
-    id,
-    {
-      nombre,
-      resumen,
-      palabrasClave,
-      requisitos,
-      precio,
-      duracion,
-      regularidad,
-      certificacion,
-      inscriptos,
-      imagen,
-      descripcion,
-      inicio,
-    },
-    { new: true }
-  );
 };
+
+const updatedCourse = await updateCourseById(id, {
+  nombre,
+  resumen,
+  palabrasClave,
+  requisitos,
+  precio,
+  duracion,
+  regularidad,
+  certificacion,
+  inscriptos,
+  imagen,
+  descripcion,
+  inicio,
+});
+
 
 const deleteCourseById = async (courseId) => {
   return await Course.findByIdAndDelete(courseId);
