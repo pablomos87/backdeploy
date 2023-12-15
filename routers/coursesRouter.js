@@ -92,12 +92,14 @@ coursesRouter.get('/detail', async (req, res) => {
   }
 });
 
-coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
+coursesRouter.post('/edit', async (req, res) => {
   const {
     nombre,
+    resumen,
     precio,
     duracion,
     regularidad,
+    requisitos,
     certificacion,
     inscriptos,
     imagen,
@@ -106,29 +108,21 @@ coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
     id,
   } = req.body;
 
-  const updatedCourse = await updateCourseById(
-    id,
-    {
-      nombre,
-      precio,
-      duracion,
-      regularidad,
-      certificacion,
-      inscriptos,
-      imagen,
-      descripcion,
-      inicio,
-    },
-    { new: true }
-  );
+  const updatedCourse = await updateCourseById(id, {
+    nombre,
+    resumen,
+    precio,
+    requisitos,
+    duracion,
+    regularidad,
+    certificacion,
+    inscriptos,
+    imagen,
+    descripcion,
+    inicio,
+  });
 
-  if (updatedCourse) {
-    res.json({ message: 'Curso actualizado exitosamente' });
-    console.log('Curso actualizado');
-  } else {
-    res.json('Error al actualizar el curso');
-    console.log('Error al actualizar el curso');
-  }
+  res.status(200).json({ message: `Curso con ID ${id} editado exitosamente` });
 });
 
 coursesRouter.delete('/delete', async (req, res) => {
