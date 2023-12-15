@@ -10,7 +10,7 @@ const {
   updateUserById,
   loginUser,
   registerUser,
-  searchCourses,
+  /* searchCourses, */
 } = require('../dao/controllers/userController');
 const bcrypt = require('bcrypt');
 
@@ -107,6 +107,6 @@ userRouter.post('/edit', authenticateToken, async (req, res) => {
     .json({ message: `Usuario con ID ${id} editado exitosamente` });
 });
 
-userRouter.get('/buscar', searchCourses);
+/* userRouter.get('/buscar', searchCourses); */
 
 module.exports = userRouter;

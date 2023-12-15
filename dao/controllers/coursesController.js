@@ -143,7 +143,7 @@ const removeUserCoursesRegistration = async (req, res) => {
   }
 };
 
-const searchCourses = async (req, res) => {
+/* const searchCourses = async (req, res) => {
   try {
     const { query } = req.query; 
     const cursosEncontrados = await Course.find({
@@ -162,9 +162,7 @@ const searchCourses = async (req, res) => {
     console.error('Error al buscar cursos:', error);
     res.status(500).json({ message: 'Hubo un error al buscar cursos.' });
   }
-};
-
-module.exports = { buscarCursos };
+}; */
 
 module.exports = {
   createCourse,
@@ -176,5 +174,5 @@ module.exports = {
   getCourseCount,
   registerUserCourses,
   removeUserCoursesRegistration,
-  searchCourses
+  /* searchCourses */
 };
