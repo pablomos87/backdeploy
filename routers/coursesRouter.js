@@ -9,6 +9,7 @@ const {
   getCourseCount,
   registerUserCourses,
   removeUserCoursesRegistration,
+  searchCourses,
 } = require('../dao/controllers/coursesController');
 const authenticateAdminToken = require ('../middleweres/tokenMiddlewere');
 const authenticateToken = require ('../middleweres/tokenMiddlewere');
@@ -20,6 +21,7 @@ coursesRouter.post('/newcourse', authenticateAdminToken, async (req, res) => {
     const {
       nombre,
       resumen,
+      palabrasClave,
       precio,
       duracion,
       regularidad,
@@ -35,6 +37,7 @@ coursesRouter.post('/newcourse', authenticateAdminToken, async (req, res) => {
       nombre &&
       precio &&
       resumen &&
+      palabrasClave &&
       duracion &&
       regularidad &&
       certificacion &&
@@ -48,6 +51,7 @@ coursesRouter.post('/newcourse', authenticateAdminToken, async (req, res) => {
         nombre,
         resumen,
         precio,
+        palabrasClave,
         inicio,
         requisitos,
         duracion,
@@ -94,6 +98,7 @@ coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
     nombre,
     resumen,
     precio,
+    palabrasClave,
     duracion,
     regularidad,
     requisitos,
@@ -109,6 +114,7 @@ coursesRouter.post('/edit', authenticateAdminToken, async (req, res) => {
     nombre,
     resumen,
     precio,
+    palabrasClave,
     requisitos,
     duracion,
     regularidad,
@@ -141,6 +147,21 @@ coursesRouter.get('/random', async (req, res) => {
   } catch (error) {
     console.error('Error al obtener cursos aleatorios:', error);
     res.status(500).json({ error: 'Error al obtener cursos aleatorios' });
+  }
+});
+
+coursesRouter.get('/search', async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res.status(400).json({ error: 'La consulta de búsqueda está vacía' });
+    }
+
+    await searchCourses(req, res);
+  } catch (error) {
+    console.error('Error al buscar cursos:', error);
+    res.status(500).json({ error: 'Error al buscar cursos' });
   }
 });
 

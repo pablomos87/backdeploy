@@ -7,6 +7,7 @@ connectDB();
     const Course = mongoose.model ("Course", {
         nombre: String,
         resumen: String,
+        palabrasClave: String,
         precio: Number,
         duracion: String,
         regularidad: String,
