@@ -99,6 +99,7 @@ const registerUserCourses = async (req, res) => {
       !course.students ||
       !course.students.some((student) => student.equals(userId))
     ) {
+      const registrationId = `${Date.now()}_${userId}_${courseId}`;
       course.fechaInscripcion = new Date();
       course.students = course.students || [];
       course.students.push(userId);
@@ -109,7 +110,9 @@ const registerUserCourses = async (req, res) => {
 
       return res
         .status(200)
-        .json({ message: 'Usuario inscrito correctamente en el curso' });
+        .json({ message: 'Usuario inscrito correctamente en el curso',
+        registrationId: registrationId });
+        
     } else {
       return res
         .status(400)
