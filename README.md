@@ -107,7 +107,14 @@ npm install
 
 #
 
-También puedes acceder a la aplicación en línea en https://frontdeploy-pablomos87.vercel.app/ o https://proyectofinal-utn.netlify.app/
+También puedes acceder a la aplicación en línea:
+
+Backend:
+- https://back-proyecto-utn.onrender.com/
+
+Frontend:
+- https://frontdeploy-pablomos87.vercel.app/  
+- https://proyectofinal-utn.netlify.app/
 
 
 
