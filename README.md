@@ -107,7 +107,7 @@ npm install
 
 #
 
-También puedes acceder a la aplicación en línea en https://proyecto-final-app.vercel.app/home.
+También puedes acceder a la aplicación en línea en https://frontdeploy-pablomos87.vercel.app/ o https://proyectofinal-utn.netlify.app/
 
 
 
