@@ -12,7 +12,7 @@ app.use(logger('combined'));
 app.use(express.json());
 app.use(cors({
 origin: ['https://frontdeploy-pablomos87.vercel.app', 'https://frontdeploy-gold.vercel.app', 'https://frontdeploy-git-master-pablomos87.vercel.app', 'https://proyectofinal-utn.netlify.app'],
-withCredentials: false,
+withCredentials: true,
 optionsSuccessStatus: 200 
 })); 
 
