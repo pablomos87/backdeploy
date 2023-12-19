@@ -82,9 +82,7 @@ coursesRouter.get('/', async (req, res) => {
 
 coursesRouter.get('/detail', async (req, res) => {
   const { courseId } = req.query;
-  console.log('ID del curso recibido:', courseId);
   const course = await getCourseById(courseId);
-  console.log('Curso encontrado:', course);
   if (course) {
     res.status(200).json({ course });
   } else {

@@ -26,7 +26,6 @@ const findUserByUsername = async (username) => {
 
 const getUserIdByUsername = async (username) => {
   const user = await User.findOne({ username });
-  console.log('Usuario encontrado:', user);
   if (user) {
     return user._id;
   }
@@ -119,8 +118,6 @@ const loginUser = async (req, res) => {
     if (result.ok) {
       const userId = await getUserIdByUsername(username);
       const userToken = jwt.sign({ userId, username, password }, TOKEN_SECRET, { expiresIn: '7d' });
-      console.log('El token es:', userToken);
-      console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
       res.json({ message: 'Logeado correctamente', userToken, userId });
     } else {
       throw new Error(result.message);

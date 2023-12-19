@@ -16,7 +16,6 @@ const findAdminByAdminName =  async (name) => {
 
 const getAdminIdByAdminName = async (name) => {
     const admin = await Admin.findOne({ name });
-    console.log('Admin encontrado:', admin);
     if (admin) {
       return admin._id;
     }
@@ -38,7 +37,6 @@ const isValidAdminCredentials = async (admin) =>{
         
         const passwordMatched = await bcrypt.compare(admin.password, adminFound.password);
         if (passwordMatched) {
-            console.log('Contraseña coincidente');
             return { ok: true, adminFound };
         } else {
             return { ok: false, message: 'Credenciales inválidas' };
@@ -99,8 +97,6 @@ const countAdmin =  async (admin) =>{
           if (result.ok) {
             const adminId = await getAdminIdByAdminName(name);
             const adminToken = jwt.sign({ adminId, name, password }, TOKEN_SECRET, { expiresIn: '7d' });
-            console.log('El token es:', adminToken);
-            console.log('TOKEN_SECTRET es:', TOKEN_SECRET);
             res.json({ message: 'Logeado correctamente', adminToken, adminId });
           } else {
             throw new Error(result.message);

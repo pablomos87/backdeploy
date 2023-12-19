@@ -130,8 +130,6 @@ const removeUserCoursesRegistration = async (req, res) => {
   try {
     const { userId, courseId } = req.params;
 
-    console.log('ID de usuario recibido:', userId);
-    console.log('ID de curso recibido:', courseId);
 
     const user = await findUserById(userId);
     const course = await getCourseById(courseId);
