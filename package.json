@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "star": "node server.js",
+    "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "author": "",
