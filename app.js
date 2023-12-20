@@ -24,6 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.json('Este es el backend');
 });
+app.get('/health', (req, res) => {
+  res.status(200).send('Health Check OK');
+});
 
 app.use('/users', userRouter);
 app.use('/courses',  coursesRouter);
