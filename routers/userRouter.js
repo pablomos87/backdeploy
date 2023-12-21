@@ -23,7 +23,7 @@ userRouter.get('/', authenticateToken, authenticateAdminToken, async (req, res) 
   }
 });
 
-userRouter.get('/byusername', authenticateToken, authenticateAdminToken, async (req, res) => {
+userRouter.get('/byusername', authenticateToken, async (req, res) => {
   const { username } = req.query;
 
   try {
