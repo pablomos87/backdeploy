@@ -11,7 +11,7 @@ const app = express();
 app.use(logger('combined'));
 app.use(express.json());
 app.use(cors({
-origin: ['https://frontdeploy-pablomos87.vercel.app', 'https://frontdeploy-gold.vercel.app', 'https://frontdeploy-git-master-pablomos87.vercel.app', 'https://proyectofinal-utn.netlify.app'],
+origin: ['https://frontdeploy-pablomos87.vercel.app', 'https://frontdeploy-gold.vercel.app', 'https://frontdeploy-git-master-pablomos87.vercel.app', 'https://proyectofinal-utn.netlify.app', 'http://localhost:3000/'],
 credentials: true
 })); 
 app.options('*', cors());
