@@ -11,12 +11,8 @@ const visitsCounter = async (req, res) => {
     visit.count++;
     await visit.save();
 
-    res.json({ visitas: visit.count });
+    res.json(visit.count);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-};
-
-module.exports = {
-  visitsCounter,
 };
