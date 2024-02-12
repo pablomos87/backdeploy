@@ -6,16 +6,16 @@ dotenv.config();
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
-const findAdmin =  async (name) => {
+const findAdmin =  async (adminNme) => {
     return await Admin.find ()
 };
 
-const findAdminByAdminName =  async (name) => {
-    return await Admin.findOne({name})
+const findAdminByAdminName =  async (adminName) => {
+    return await Admin.findOne({adminName})
 };
 
-const getAdminIdByAdminName = async (name) => {
-    const admin = await Admin.findOne({ name });
+const getAdminIdByAdminName = async (adminName) => {
+    const admin = await Admin.findOne({ adminName });
     if (admin) {
       return admin._id;
     }
@@ -29,7 +29,7 @@ const createAdmin = async  (admin) =>{
 
 const isValidAdminCredentials = async (admin) =>{
     try {
-        const adminFound = await Admin.findOne({ name: admin.name });
+        const adminFound = await Admin.findOne({ adminName: admin.adminName });
         if (!adminFound) {
             console.log('Admin no encontrado');
             return { ok: false, message: 'Credenciales inválidas' };
@@ -59,7 +59,7 @@ const countAdmin =  async (admin) =>{
 
     const registerAdmin = async (req, res) => {
         const {
-            name,
+            adminName,
             password,
             confirmPassword
         } = req.body;
@@ -69,7 +69,7 @@ const countAdmin =  async (admin) =>{
             return res.status(400).json({ error: 'Las contraseñas no coinciden' });
           }
 
-        const existingAdmin = await findAdminByAdminName(name);
+        const existingAdmin = await findAdminByAdminName(adminName);
           if (existingAdmin) {
               return res.status(400).json({ error: 'El administrador ya existe' });
           }
@@ -77,7 +77,7 @@ const countAdmin =  async (admin) =>{
           let hashedPassword = await bcrypt.hash(password, 10);
 
           await createAdmin({
-            name,
+            adinName,
             password: hashedPassword,
           });
       
@@ -89,14 +89,14 @@ const countAdmin =  async (admin) =>{
       };
 
     const loginAdmin = async (req, res) => {
-        const { name, password } = req.body;
+        const { adminName, password } = req.body;
       
         try {
-          const result = await isValidAdminCredentials({ name, password });
+          const result = await isValidAdminCredentials({ adminName, password });
       
           if (result.ok) {
-            const adminId = await getAdminIdByAdminName(name);
-            const adminToken = jwt.sign({ adminId, name, password }, TOKEN_SECRET, { expiresIn: '7d' });
+            const adminId = await getAdminIdByAdminName(adminName);
+            const adminToken = jwt.sign({ adminId, adminName, password }, TOKEN_SECRET, { expiresIn: '7d' });
             res.json({ message: 'Logeado correctamente', adminToken, adminId });
           } else {
             throw new Error(result.message);
