@@ -77,7 +77,7 @@ const countAdmin =  async (admin) =>{
           let hashedPassword = await bcrypt.hash(password, 10);
 
           await createAdmin({
-            adinName,
+            adminName,
             password: hashedPassword,
           });
       
