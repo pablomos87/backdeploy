@@ -45,6 +45,7 @@ const isValidAdminCredentials = async (admin) =>{
         console.error(error);
         throw new Error('Error de autenticación');
     }
+
 };
 
 
