@@ -123,7 +123,7 @@ coursesRouter.post('/edit',authenticateAdminToken, async (req, res) => {
   });
 
   if (updatedCourse) {
-    res.status(200).json({ message: `Curso con ID ${id} editado exitosamente`, course: updatedCourse });
+    res.status(200).json({ message: `Curso con ID ${id} editado exitosamente`});
   } else {
     res.status(404).json({ error: `No se pudo encontrar el curso con ID ${id}` });
   }
